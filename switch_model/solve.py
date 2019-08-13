@@ -131,6 +131,7 @@ def main(args=None, return_model=False, return_instance=False):
             if not os.path.isdir(model.options.outputs_dir):
                 raise
 
+        #embed()
         # solve the model
         if iterate_modules:
             if model.options.verbose:
@@ -574,8 +575,8 @@ def solve(model):
         solve_end_time = time.time()
         print "Solved model. Total time spent in solver: {:2f} s.".format(solve_end_time - solve_start_time)
 
-# Paty's addition for debugging:
- #   embed()
+    # Paty's addition for debugging:
+    embed()
 
     # Only return if the model solved correctly, otherwise throw a useful error
     if(results.solver.status == SolverStatus.ok and
