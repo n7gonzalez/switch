@@ -7,6 +7,7 @@ Defines load zone parameters for the SWITCH-Pyomo model.
 import os
 from pyomo.environ import *
 from switch_model.reporting import write_table
+from IPython import embed
 
 dependencies = 'switch_model.timescales'
 optional_dependencies = 'switch_model.transmission.local_td'
@@ -97,6 +98,9 @@ def define_components(mod):
     else:
         mod.Zone_Power_Withdrawals.append('zone_demand_mw')
 
+    mod.PositiveX = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
+    mod.NegativeX = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
+
     mod.EXTERNAL_COINCIDENT_PEAK_DEMAND_ZONE_PERIODS = Set(
         dimen=2, within=mod.LOAD_ZONES * mod.PERIODS,
         doc="Zone-Period combinations with zone_expected_coincident_peak_demand data.")
@@ -132,7 +136,7 @@ def define_dynamic_components(mod):
             sum(
                 getattr(m, component)[z, t]
                 for component in m.Zone_Power_Injections
-            ) == sum(
+            ) + m.PositiveX[z, t] - m.NegativeX[z, t] == sum(
                 getattr(m, component)[z, t]
                 for component in m.Zone_Power_Withdrawals)))
 
@@ -176,6 +180,7 @@ def load_inputs(mod, switch_data, inputs_dir):
         index=mod.EXTERNAL_COINCIDENT_PEAK_DEMAND_ZONE_PERIODS,
         select=('LOAD_ZONE', 'PERIOD', 'zone_expected_coincident_peak_demand'),
         param=(mod.zone_expected_coincident_peak_demand))
+    #embed()
 
 
 def post_solve(instance, outdir):

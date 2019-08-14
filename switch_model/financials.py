@@ -293,7 +293,7 @@ def define_dynamic_components(mod):
     # or calculate terms like Objective / <some other model component>,
     # so it's best to define a separate expression and use that for these purposes.
     mod.SystemCost = Expression(
-        rule=lambda m: sum(m.SystemCostPerPeriod[p] for p in m.PERIODS))
+        rule=lambda m: sum(m.SystemCostPerPeriod[p] for p in m.PERIODS) + 1000000000000*sum(m.PositiveX[zt] + m.NegativeX[zt] for zt in m.ZONE_TIMEPOINTS))
     mod.Minimize_System_Cost = Objective(
         rule=lambda m: m.SystemCost,
         sense=minimize)
