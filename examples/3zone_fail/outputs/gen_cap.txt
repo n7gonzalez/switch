@@ -2,7 +2,7 @@ GENERATION_PROJECT	PERIOD	gen_tech	gen_load_zone	gen_energy_source	GenCapacity	G
 N-Geothermal	2020	Geothermal	North	Geothermal	1	458318	0
 N-Geothermal	2030	Geothermal	North	Geothermal	1	458318	0
 N-Coal_IGCC	2020	Coal_IGCC	North	Coal	0	0	0
-N-Coal_IGCC	2030	Coal_IGCC	North	Coal	0	0	0
+N-Coal_IGCC	2030	Coal_IGCC	North	Coal	0.925934	263011	26780.8
 N-Coal_IGCC_CCS	2020	Coal_IGCC_CCS	North	Coal	0	0	0
 N-Coal_IGCC_CCS	2030	Coal_IGCC_CCS	North	Coal	0	0	0
 N-Coal_ST	2020	Coal_ST	North	Coal	2	411840	42780
@@ -32,11 +32,11 @@ N-Wind-1	2030	Wind	North	Wind	4	616648	223200
 N-Wind-2	2020	Wind	North	Wind	0	0	0
 N-Wind-2	2030	Wind	North	Wind	1	154860	55800
 C-Coal_IGCC	2020	Coal_IGCC	Central	Coal	0	0	0
-C-Coal_IGCC	2030	Coal_IGCC	Central	Coal	0	0	0
+C-Coal_IGCC	2030	Coal_IGCC	Central	Coal	1	228103	23138.4
 C-Coal_ST	2020	Coal_ST	Central	Coal	2	411840	42780
 C-Coal_ST	2030	Coal_ST	Central	Coal	0	0	0
-C-NG_CC	2020	NG_CC	Central	NaturalGas	2.47824	270730	13981.8
-C-NG_CC	2030	NG_CC	Central	NaturalGas	1248.29	1.14612e+08	5.8603e+06
+C-NG_CC	2020	NG_CC	Central	NaturalGas	2	226820	11736.6
+C-NG_CC	2030	NG_CC	Central	NaturalGas	1	91814.7	4694.64
 C-NG_GT	2020	NG_GT	Central	NaturalGas	2	125164	9783.6
 C-NG_GT	2030	NG_GT	Central	NaturalGas	0	0	0
 C-Nuclear	2020	Nuclear	Central	Uranium	0	0	0
@@ -46,11 +46,11 @@ C-Biomass_IGCC	2030	Biomass_IGCC	Central	BioSolid	0	0	0
 C-Residential_PV	2020	Residential_PV	Central	Solar	0	0	0
 C-Residential_PV	2030	Residential_PV	Central	Solar	0	0	0
 C-Commercial_PV	2020	Commercial_PV	Central	Solar	0	0	0
-C-Commercial_PV	2030	Commercial_PV	Central	Solar	0	0	0
+C-Commercial_PV	2030	Commercial_PV	Central	Solar	0.553257	115009	16876.5
 C-Central_PV-1	2020	Central_PV	Central	Solar	0	0	0
-C-Central_PV-1	2030	Central_PV	Central	Solar	0	0	0
+C-Central_PV-1	2030	Central_PV	Central	Solar	2	347586	61008
 C-Central_PV-2	2020	Central_PV	Central	Solar	0	0	0
-C-Central_PV-2	2030	Central_PV	Central	Solar	0	0	0
+C-Central_PV-2	2030	Central_PV	Central	Solar	3	499481	91512
 C-Wind-1	2020	Wind	Central	Wind	0	0	0
 C-Wind-1	2030	Wind	Central	Wind	4	498237	178560
 C-Wind-2	2020	Wind	Central	Wind	0	0	0
@@ -58,7 +58,7 @@ C-Wind-2	2030	Wind	Central	Wind	3	374971	133920
 S-Geothermal	2020	Geothermal	South	Geothermal	3	1.36798e+06	0
 S-Geothermal	2030	Geothermal	South	Geothermal	3	1.36798e+06	0
 S-NG_CC	2020	NG_CC	South	NaturalGas	5	567050	29341.5
-S-NG_CC	2030	NG_CC	South	NaturalGas	0	0	0
+S-NG_CC	2030	NG_CC	South	NaturalGas	1	135005	7041.96
 S-NG_CC_CCS	2020	NG_CC_CCS	South	NaturalGas	0	0	0
 S-NG_CC_CCS	2030	NG_CC_CCS	South	NaturalGas	0	0	0
 S-NG_GT	2020	NG_GT	South	NaturalGas	2	125164	9783.6

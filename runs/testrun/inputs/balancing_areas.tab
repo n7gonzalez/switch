@@ -1,0 +1,9 @@
+BALANCING_AREAS	quickstart_res_load_frac	quickstart_res_wind_frac	quickstart_res_solar_frac	spinning_res_load_frac	spinning_res_wind_frac	spinning_res_solar_frac
+Central_China	0.03	0.05	0.05	.	.	.
+East_China	0.03	0.05	0.05	.	.	.
+North_China	0.03	0.05	0.05	.	.	.
+North_East_Grid	0.03	0.05	0.05	.	.	.
+North_West_Grid	0.03	0.05	0.05	.	.	.
+Southern_Power	0.03	0.05	0.05	.	.	.
+Taiwan	0.03	0.05	0.05	.	.	.
+Tibet	0.03	0.05	0.05	.	.	.

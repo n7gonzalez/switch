@@ -576,7 +576,7 @@ def solve(model):
         print "Solved model. Total time spent in solver: {:2f} s.".format(solve_end_time - solve_start_time)
 
     # Paty's addition for debugging:
-    embed()
+    #embed()
 
     # Only return if the model solved correctly, otherwise throw a useful error
     if(results.solver.status == SolverStatus.ok and

@@ -336,10 +336,12 @@ def define_components(mod):
             m.BuildGen[g, bld_yr]
             for bld_yr in m.BLD_YRS_FOR_GEN_PERIOD[g, period]))
 
+    mod.MaxBuildPotentialSlack = Var(mod.CAPACITY_LIMITED_GENS * mod.PERIODS, within=NonNegativeReals)
+
     mod.Max_Build_Potential = Constraint(
         mod.CAPACITY_LIMITED_GENS, mod.PERIODS,
         rule=lambda m, g, p: (
-            m.gen_capacity_limit_mw[g] >= m.GenCapacity[g, p]))
+            m.gen_capacity_limit_mw[g] + m.MaxBuildPotentialSlack[g, p] >= m.GenCapacity[g, p]))
 
     # The following components enforce minimum capacity build-outs.
     # Note that this adds binary variables to the model.

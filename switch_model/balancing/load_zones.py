@@ -98,8 +98,8 @@ def define_components(mod):
     else:
         mod.Zone_Power_Withdrawals.append('zone_demand_mw')
 
-    mod.PositiveX = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
-    mod.NegativeX = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
+    mod.LoadZonePositive = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
+    mod.LoadZoneNegative = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
 
     mod.EXTERNAL_COINCIDENT_PEAK_DEMAND_ZONE_PERIODS = Set(
         dimen=2, within=mod.LOAD_ZONES * mod.PERIODS,
@@ -136,7 +136,7 @@ def define_dynamic_components(mod):
             sum(
                 getattr(m, component)[z, t]
                 for component in m.Zone_Power_Injections
-            ) + m.PositiveX[z, t] - m.NegativeX[z, t] == sum(
+            ) + m.LoadZonePositive[z, t] - m.LoadZoneNegative[z, t] == sum(
                 getattr(m, component)[z, t]
                 for component in m.Zone_Power_Withdrawals)))
 
