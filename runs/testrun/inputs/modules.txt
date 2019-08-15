@@ -2,6 +2,7 @@
 switch_model
 switch_model.timescales
 switch_model.financials
+#switch_model.financials_rps
 switch_model.balancing.load_zones
 switch_model.energy_sources.properties
 switch_model.generators.core.build
@@ -15,7 +16,7 @@ switch_model.generators.core.no_commit
 switch_model.transmission.transport.build
 switch_model.transmission.transport.dispatch
 #switch_model.policies.carbon_policies_CA
-#switch_model.policies.rps_simple
+switch_model.policies.rps_simple
 #switch_model.balancing.planning_reserves
 #switch_model.reporting.basic_exports_wecc
 #switch_model.policies.carbon_policies

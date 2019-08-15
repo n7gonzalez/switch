@@ -357,7 +357,7 @@ def define_components(mod):
     mod.Enforce_Min_Build_Lower = Constraint(
         mod.NEW_GEN_WITH_MIN_BUILD_YEARS,
         rule=lambda m, g, p: (
-            m.BuildMinGenCap[g, p] * m.gen_min_build_capacity[g] 
+            m.BuildMinGenCap[g, p] * m.gen_min_build_capacity[g]
             <= m.BuildGen[g, p]))
     
     # Define a constant for enforcing binary constraints on project capacity

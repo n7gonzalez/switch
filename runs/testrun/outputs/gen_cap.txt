@@ -6743,7 +6743,7 @@ GENERATION_PROJECT	PERIOD	gen_tech	gen_load_zone	gen_energy_source	GenCapacity	G
 1350	2021	Nuclear	Shanghai	Uranium	0	0	0
 1350	2026	Nuclear	Shanghai	Uranium	0	0	0
 1350	2031	Nuclear	Shanghai	Uranium	0	0	0
-1350	2036	Nuclear	Shanghai	Uranium	0	0	0
+1350	2036	Nuclear	Shanghai	Uranium	1.85134e-10	2.90508e-05	1.22188e-05
 1351	2016	Nuclear	Zhejiang	Uranium	0	0	0
 1351	2021	Nuclear	Zhejiang	Uranium	0	0	0
 1351	2026	Nuclear	Zhejiang	Uranium	0	0	0

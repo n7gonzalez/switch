@@ -90,9 +90,11 @@ def define_components(mod):
             for g in m.NON_FUEL_BASED_GENS 
                 for t in m.TPS_FOR_GEN_IN_PERIOD[g, p]))
 
+    mod.RPSEnforceTargetSlack = Var(mod.RPS_PERIODS, within=NonNegativeReals)
+
     mod.RPS_Enforce_Target = Constraint(
         mod.RPS_PERIODS,
-        rule=lambda m, p: (m.RPSFuelEnergy[p] + m.RPSNonFuelEnergy[p] >=
+        rule=lambda m, p: (m.RPSFuelEnergy[p] + m.RPSNonFuelEnergy[p] + m.RPSEnforceTargetSlack[p] >=
             m.rps_target[p] * total_demand_in_period(m, p)))
 
 
