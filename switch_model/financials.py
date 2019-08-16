@@ -292,8 +292,33 @@ def define_dynamic_components(mod):
     # starting with Pyomo 4.2, it is impossible to call Objective.reconstruct() 
     # or calculate terms like Objective / <some other model component>,
     # so it's best to define a separate expression and use that for these purposes.
+
+    # The system cost has been expanded into a full function. This is to take advantage of conditions.
+    # The model can check for the SET created by each module as a shorthand for checking the existence of that module.
+    # This avoids a null pointer error.
+    def System_Cost_rule(m):
+        SLACK_VARIABLE_PENALTY = 1000000000000
+        system_cost = sum(m.SystemCostPerPeriod[p] for p in m.PERIODS)
+        system_cost += SLACK_VARIABLE_PENALTY*(sum(m.LoadZonePositive[zt] + m.LoadZoneNegative[zt] for zt in m.ZONE_TIMEPOINTS))
+        # transmission.transport.build
+        if 'TRANS_TIMEPOINTS' in dir(m):
+            system_cost += sum(m.MaximumDispatchTxSlack[t] for t in m.TRANS_TIMEPOINTS)
+        # generators.core.build
+        if 'CAPACITY_LIMITED_GENS' in dir(m):
+            system_cost += sum(m.MaxBuildPotentialSlack[gp] for gp in m.CAPACITY_LIMITED_GENS * m.PERIODS)
+        # policies.rps_simple
+        if 'RPS_PERIODS' in dir(m):
+            system_cost += sum(m.RPSEnforceTargetSlack[p] for p in m.RPS_PERIODS)
+        # energy_sources.fuel_costs.simple
+        if 'GEN_TP_FUELS_AVAILABLE' in dir(m):
+            system_cost += sum(m.EnforceFuelUnavailabilityPos[gtf] + m.EnforceFuelUnavailabilityNeg[gtf] for gtf in m.GEN_TP_FUELS_UNAVAILABLE)
+        # balancing.electric_vehicles.simple
+        if 'EVCumulativeChargeUpperSlack' in dir(m):
+            system_cost += sum(m.EVCumulativeChargeUpperSlack[zt] + m.EVCumulativeChargeLowerSlack[zt] for zt in m.LOAD_ZONES * m.TIMEPOINTS)
+        return system_cost
+
     mod.SystemCost = Expression(
-        rule=lambda m: sum(m.SystemCostPerPeriod[p] for p in m.PERIODS) + 1000000000000*(sum(m.LoadZonePositive[zt] + m.LoadZoneNegative[zt] for zt in m.ZONE_TIMEPOINTS) + sum(m.MaximumDispatchTxSlack[t] for t in m.TRANS_TIMEPOINTS) + sum(m.MaxBuildPotentialSlack[gp] for gp in m.CAPACITY_LIMITED_GENS * m.PERIODS)))
+        rule=System_Cost_rule)
     mod.Minimize_System_Cost = Objective(
         rule=lambda m: m.SystemCost,
         sense=minimize)
