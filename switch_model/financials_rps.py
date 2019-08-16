@@ -293,7 +293,7 @@ def define_dynamic_components(mod):
     # or calculate terms like Objective / <some other model component>,
     # so it's best to define a separate expression and use that for these purposes.
     mod.SystemCost = Expression(
-        rule=lambda m: sum(m.SystemCostPerPeriod[p] for p in m.PERIODS) + 1000000000000*(sum(m.LoadZonePositive[zt] + m.LoadZoneNegative[zt] for zt in m.ZONE_TIMEPOINTS) + sum(m.MaximumDispatchTxSlack[t] for t in m.TRANS_TIMEPOINTS) + sum(m.MaxBuildPotentialSlack[gp] for gp in m.CAPACITY_LIMITED_GENS * m.PERIODS) + sum(m.RPSEnforceTargetSlack[p] for p in m.RPS_PERIODS) + sum(m.EnforceFuelUnavailabilityPos[gtf] + m.EnforceFuelUnavailabilityNeg[gtf] for gtf in m.GEN_TP_FUELS_UNAVAILABLE)))
+        rule=lambda m: sum(m.SystemCostPerPeriod[p] for p in m.PERIODS) + 1000000000000*(sum(m.LoadZonePositive[zt] + m.LoadZoneNegative[zt] for zt in m.ZONE_TIMEPOINTS) + sum(m.MaximumDispatchTxSlack[t] for t in m.TRANS_TIMEPOINTS) + sum(m.MaxBuildPotentialSlack[gp] for gp in m.CAPACITY_LIMITED_GENS * m.PERIODS) + sum(m.RPSEnforceTargetSlack[p] for p in m.RPS_PERIODS) + sum(m.EnforceFuelUnavailabilityPos[gtf] + m.EnforceFuelUnavailabilityNeg[gtf] for gtf in m.GEN_TP_FUELS_UNAVAILABLE) + sum(m.EVCumulativeChargeUpperSlack[zt] + m.EVCumulativeChargeLowerSlack[zt] for zt in m.LOAD_ZONES * m.TIMEPOINTS)))
     mod.Minimize_System_Cost = Objective(
         rule=lambda m: m.SystemCost,
         sense=minimize)
