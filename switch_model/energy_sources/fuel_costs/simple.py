@@ -61,11 +61,11 @@ def define_components(mod):
             not in m.ZONE_FUEL_PERIODS))
 
     mod.EnforceFuelUnavailabilityPos = Var(mod.GEN_TP_FUELS_UNAVAILABLE, within=NonNegativeReals)
-    mod.EnforceFuelUnavailabilityNeg = Var(mod.GEN_TP_FUELS_UNAVAILABLE, within=NonPositiveReals)
+    mod.EnforceFuelUnavailabilityNeg = Var(mod.GEN_TP_FUELS_UNAVAILABLE, within=NonNegativeReals)
 
     mod.Enforce_Fuel_Unavailability = Constraint(
         mod.GEN_TP_FUELS_UNAVAILABLE,
-        rule=lambda m, g, t, f: m.GenFuelUseRate[g, t, f] + m.EnforceFuelUnavailabilityPos[g, t, f] + m.EnforceFuelUnavailabilityNeg[g, t, f] == 0)
+        rule=lambda m, g, t, f: m.GenFuelUseRate[g, t, f] + m.EnforceFuelUnavailabilityPos[g, t, f] - m.EnforceFuelUnavailabilityNeg[g, t, f] == 0)
 
     # Summarize total fuel costs in each timepoint for the objective function
     def FuelCostsPerTP_rule(m, t):
