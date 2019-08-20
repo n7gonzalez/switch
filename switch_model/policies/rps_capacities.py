@@ -67,15 +67,31 @@ def define_components(mod):
     		p in m.PERIODS and
     		e in m.ENERGY_SOURCES))
 
+    mod.PERIOD_ENERGY_MAX = Set(
+    	dimen=2,
+    	validate=lambda m, p, e: (
+    		p in m.PERIODS and
+    		e in m.ENERGY_SOURCES))
+
     mod.minimum_capacity = Param(
     	mod.PERIOD_ENERGY_MIN,
     	within=NonNegativeReals,
     	default=0)
 
+    mod.maximum_capacity = Param(
+    	mod.PERIOD_ENERGY_MAX,
+    	within=NonNegativeReals,
+        default=10000000000)
+
     mod.Minimum_Capacity_Installed = Constraint(
     	mod.PERIOD_ENERGY_MIN,
     	rule=lambda m, p, e: (
     		sum(m.GenCapacity[g, p] for g in m.GENERATION_PROJECTS if m.gen_energy_source[g] == e) >= m.minimum_capacity[p, e]))
+
+    mod.Maximum_Capacity_Installed = Constraint(
+    	mod.PERIOD_ENERGY_MAX,
+    	rule=lambda m, p, e: (
+    		sum(m.GenCapacity[g, p] for g in m.GENERATION_PROJECTS if m.gen_energy_source[g] == e) <= m.maximum_capacity[p, e]))
 
 def load_inputs(mod, switch_data, inputs_dir):
     """
@@ -99,3 +115,9 @@ def load_inputs(mod, switch_data, inputs_dir):
     	select=('Period', 'Energy_Source', 'Minimum_Capacity'),
     	index=(mod.PERIOD_ENERGY_MIN),
     	param=[mod.minimum_capacity])
+
+    switch_data.load_aug(
+    	filename=os.path.join(inputs_dir, 'rps_capacity_max.tab'),
+    	select=('Period', 'Energy_Source', 'Maximum_Capacity'),
+    	index=(mod.PERIOD_ENERGY_MAX),
+    	param=[mod.maximum_capacity])
