@@ -1,0 +1,5 @@
+Period	Energy_Source	Max_Curtailment_Rate
+2020	Wind	0.9
+2020	Solar	0.9
+2030	Wind	0.9
+2030	Solar	0.9
