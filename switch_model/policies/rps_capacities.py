@@ -81,17 +81,20 @@ def define_components(mod):
     mod.maximum_capacity = Param(
     	mod.PERIOD_ENERGY_MAX,
     	within=NonNegativeReals,
-        default=10000000000)
+        default=10000000000000000)
+
+    mod.RPSCapacityMaxSlack = Var(mod.PERIOD_ENERGY_MAX, within=NonNegativeReals)
+    mod.RPSCapacityMinSlack = Var(mod.PERIOD_ENERGY_MIN, within=NonNegativeReals)
 
     mod.Minimum_Capacity_Installed = Constraint(
     	mod.PERIOD_ENERGY_MIN,
     	rule=lambda m, p, e: (
-    		sum(m.GenCapacity[g, p] for g in m.GENERATION_PROJECTS if m.gen_energy_source[g] == e) >= m.minimum_capacity[p, e]))
+    		sum(m.GenCapacity[g, p] for g in m.GENERATION_PROJECTS if m.gen_energy_source[g] == e)+m.RPSCapacityMinSlack[p,e] >= m.minimum_capacity[p, e]))
 
     mod.Maximum_Capacity_Installed = Constraint(
     	mod.PERIOD_ENERGY_MAX,
     	rule=lambda m, p, e: (
-    		sum(m.GenCapacity[g, p] for g in m.GENERATION_PROJECTS if m.gen_energy_source[g] == e) <= m.maximum_capacity[p, e]))
+    		sum(m.GenCapacity[g, p] for g in m.GENERATION_PROJECTS if m.gen_energy_source[g] == e) <= m.maximum_capacity[p, e]+m.RPSCapacityMaxSlack[p,e]))
 
 def load_inputs(mod, switch_data, inputs_dir):
     """

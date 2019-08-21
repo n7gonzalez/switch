@@ -302,19 +302,21 @@ def define_dynamic_components(mod):
         system_cost += SLACK_VARIABLE_PENALTY*(sum(m.LoadZonePositive[zt] + m.LoadZoneNegative[zt] for zt in m.ZONE_TIMEPOINTS))
         # transmission.transport.build
         if 'TRANS_TIMEPOINTS' in dir(m):
-            system_cost += sum(m.MaximumDispatchTxSlack[t] for t in m.TRANS_TIMEPOINTS)
+            system_cost += SLACK_VARIABLE_PENALTY*sum(m.MaximumDispatchTxSlack[t] for t in m.TRANS_TIMEPOINTS)
         # generators.core.build
         if 'CAPACITY_LIMITED_GENS' in dir(m):
-            system_cost += sum(m.MaxBuildPotentialSlack[gp] for gp in m.CAPACITY_LIMITED_GENS * m.PERIODS)
+            system_cost += SLACK_VARIABLE_PENALTY*sum(m.MaxBuildPotentialSlack[gp] for gp in m.CAPACITY_LIMITED_GENS * m.PERIODS)
         # policies.rps_simple
         if 'RPS_PERIODS' in dir(m):
-            system_cost += sum(m.RPSEnforceTargetSlack[p] for p in m.RPS_PERIODS)
+            system_cost += SLACK_VARIABLE_PENALTY*sum(m.RPSEnforceTargetSlack[p] for p in m.RPS_PERIODS)
         # energy_sources.fuel_costs.simple
         if 'GEN_TP_FUELS_AVAILABLE' in dir(m):
-            system_cost += sum(m.EnforceFuelUnavailabilityPos[gtf] + m.EnforceFuelUnavailabilityNeg[gtf] for gtf in m.GEN_TP_FUELS_UNAVAILABLE)
+            system_cost += SLACK_VARIABLE_PENALTY*sum(m.EnforceFuelUnavailabilityPos[gtf] + m.EnforceFuelUnavailabilityNeg[gtf] for gtf in m.GEN_TP_FUELS_UNAVAILABLE)
         # balancing.electric_vehicles.simple
         if 'EVCumulativeChargeUpperSlack' in dir(m):
-            system_cost += sum(m.EVCumulativeChargeUpperSlack[zt] + m.EVCumulativeChargeLowerSlack[zt] for zt in m.LOAD_ZONES * m.TIMEPOINTS)
+            system_cost += SLACK_VARIABLE_PENALTY*sum(m.EVCumulativeChargeUpperSlack[zt] + m.EVCumulativeChargeLowerSlack[zt] for zt in m.LOAD_ZONES * m.TIMEPOINTS)
+        if 'PERIOD_ENERGY_MIN' in dir(m):
+            system_cost += SLACK_VARIABLE_PENALTY*sum(m.RPSCapacityMaxSlack[pe] + m.RPSCapacityMinSlack[pe] for pe in m.PERIOD_ENERGY_MIN)
         return system_cost
 
     mod.SystemCost = Expression(
