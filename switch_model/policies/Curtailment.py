@@ -182,7 +182,7 @@ def post_solve(instance, outdir):
 
     annual_summary = dispatch_full_df.groupby(['gen_tech', "gen_energy_source", "period"]).sum()
     annual_summary.to_csv(
-        os.path.join(outdir, "dispatch_annual_summary_1.csv"),
+        os.path.join(outdir, "Curtailment_energy.csv"),
         columns=["Energy_GWh_typical_yr_ideal", "Energy_GWh_typical_yr_actual","VariableCost_per_yr", 
                  "DispatchEmissions_tCO2_per_typical_yr"])
     
