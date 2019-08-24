@@ -214,6 +214,7 @@ def post_solve(instance, outdir):
     dispatch info to storage_dispatch.txt
     """
     import switch_model.reporting as reporting
+    """
     reporting.write_table(
         instance, instance.STORAGE_GEN_BLD_YRS,
         output_file=os.path.join(outdir, "storage_builds.txt"),
@@ -225,6 +226,7 @@ def post_solve(instance, outdir):
             m.BuildGen[g, bld_yr], m.BuildStorageEnergy[g, bld_yr],
             m.GenCapacity[g, bld_yr], m.StorageEnergyCapacity[g, bld_yr]
             ))
+    """
     reporting.write_table(
         instance, instance.STORAGE_GEN_TPS,
         output_file=os.path.join(outdir, "storage_dispatch.txt"),
