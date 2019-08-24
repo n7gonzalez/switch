@@ -4,6 +4,7 @@
 import os
 from pyomo.environ import *
 import pandas as pd
+
 """
 
 This module defines a simple Renewable Portfolio Standard (RPS) policy scheme
@@ -131,6 +132,8 @@ def load_inputs(mod, switch_data, inputs_dir):
     	select=('Period', 'Energy_Source', 'Max_Curtailment_Rate'),
     	index=(mod.PERIOD_Curtailment_MAX),
     	param=[mod.max_curtailment_Rate])
+
+
 def post_solve(instance, outdir):
     """
     Exported files:
@@ -185,4 +188,3 @@ def post_solve(instance, outdir):
         os.path.join(outdir, "Curtailment_energy.csv"),
         columns=["Energy_GWh_typical_yr_ideal", "Energy_GWh_typical_yr_actual","VariableCost_per_yr", 
                  "DispatchEmissions_tCO2_per_typical_yr"])
-    

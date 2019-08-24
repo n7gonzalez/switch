@@ -75,6 +75,9 @@ def define_components(mod):
 
     # To do: Add validation check that timeseries data are specified for every
     # valid timepoint.
+    mod.HydroEnfroceMinSlack=Var(mod.HYDRO_GEN_TPS, within=NonNegativeReals)
+    mod.HydroEnfroceMaxSlackPositive=Var(mod.HYDRO_GEN_TPS, within=NonNegativeReals)
+    mod.HydroEnfroceMaxSlackNegative=Var(mod.HYDRO_GEN_TPS, within=NonNegativeReals)
 
     mod.hydro_min_flow_mw = Param(
         mod.HYDRO_GEN_TS,
@@ -83,18 +86,19 @@ def define_components(mod):
     mod.Enforce_Hydro_Min_Flow = Constraint(
         mod.HYDRO_GEN_TPS,
         rule=lambda m, g, t: (
-            m.DispatchGen[g, t] >= m.hydro_min_flow_mw[g, m.tp_ts[t]]))
+            m.DispatchGen[g, t] +m.HydroEnfroceMinSlack[g, t] >= m.hydro_min_flow_mw[g, m.tp_ts[t]]))
 
     mod.hydro_avg_flow_mw = Param(
         mod.HYDRO_GEN_TS,
         within=NonNegativeReals,
         default=0.0)
+    
     mod.Enforce_Hydro_Avg_Flow = Constraint(
         mod.HYDRO_GEN_TS,
-        rule=lambda m, g, ts: (
-            sum(m.DispatchGen[g, t] for t in m.TPS_IN_TS[ts]) / m.ts_num_tps[ts]
-            == m.hydro_avg_flow_mw[g, ts]))
-
+        rule=lambda m, g, ts: \
+            sum(m.DispatchGen[g, t]+m.HydroEnfroceMaxSlackPositive[g, t]-m.HydroEnfroceMaxSlackNegative[g,t] for t in m.TPS_IN_TS[ts]) / m.ts_num_tps[ts]
+            == m.hydro_avg_flow_mw[g, ts] )
+    
     mod.min_data_check('hydro_min_flow_mw', 'hydro_avg_flow_mw')
 
 
