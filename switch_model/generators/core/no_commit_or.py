@@ -15,6 +15,7 @@ dependencies = 'switch_model.timescales', 'switch_model.balancing.load_zones',\
 
 def define_components(mod):
     """
+
     Adds components to a Pyomo abstract model object to constrain
     dispatch decisions subject to available capacity, renewable resource
     availability, and baseload restrictions. Unless otherwise stated,
@@ -27,25 +28,32 @@ def define_components(mod):
     production can be approximated as a line with a 0 intercept. This
     estimation method has been known to result in excessive cycling of
     Combined Cycle Gas Turbines in the SWITCH-WECC model.
+
     DispatchUpperLimit[(g, t) in GEN_TPS] is an
     expression that defines the upper bounds of dispatch subject to
     installed capacity, average expected outage rates, and renewable
     resource availability.
+
     DispatchLowerLimit[(g, t) in GEN_TPS] in an
     expression that defines the lower bounds of dispatch, which is 0
     except for baseload plants where is it the upper limit.
+
     Enforce_Dispatch_Lower_Limit[(g, t) in GEN_TPS] and
     Enforce_Dispatch_Upper_Limit[(g, t) in GEN_TPS] are
     constraints that limit DispatchGen to the upper and lower bounds
     defined above.
+
         DispatchLowerLimit <= DispatchGen <= DispatchUpperLimit
+
     GenFuelUseRate_Calculate[(g, t) in GEN_TPS]
     calculates fuel consumption for the variable GenFuelUseRate as
     DispatchGen * gen_full_load_heat_rate. The units become:
     MW * (MMBtu / MWh) = MMBTU / h
+
     DispatchGenByFuel[(g, t, f) in GEN_TP_FUELS]
     calculates power production by each project from each fuel during
     each timepoint.
+
     """
 
     # NOTE: DispatchBaseloadByPeriod should eventually be replaced by 
@@ -84,11 +92,6 @@ def define_components(mod):
         mod.GEN_TPS,
         rule=lambda m, g, t: (
             m.DispatchGen[g, t] <= m.DispatchUpperLimit[g, t]))
-    
-    mod.Enforce_Dispatch_Lower_Limit = Constraint(
-        mod.GEN_TPS,
-        rule=lambda m, g, t: (
-            m.DispatchGen[g, t] >= m.DispatchUpperLimit[g, t]*m.gen_dispatch_minimum[g]))
 
     mod.GenFuelUseRate_Calculate = Constraint(
         mod._FUEL_BASED_GEN_TPS,

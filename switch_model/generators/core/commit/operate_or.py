@@ -420,21 +420,12 @@ def load_inputs(mod, switch_data, inputs_dir):
         gen_max_commit_fraction_TP, gen_min_load_fraction_TP
 
     """
-
-    
     switch_data.load_aug(
         optional=True,
         filename=os.path.join(inputs_dir, 'generation_projects_info.tab'),
         auto_select=True,
-        optional_params=['gen_min_load_fraction'],
-        index=mod.GENERATION_PROJECTS,
-        param=(mod.gen_min_load_fraction))
-    
-    switch_data.load_aug(
-        optional=True,
-        filename=os.path.join(inputs_dir, 'generation_projects_info.tab'),
-        auto_select=True,
-        param=( mod.gen_startup_fuel, mod.gen_startup_om, mod.gen_min_uptime, mod.gen_min_downtime))
+        param=(mod.gen_min_load_fraction, mod.gen_startup_fuel,
+               mod.gen_startup_om, mod.gen_min_uptime, mod.gen_min_downtime))
     switch_data.load_aug(
         optional=True,
         filename=os.path.join(inputs_dir, 'gen_timepoint_commit_bounds.tab'),

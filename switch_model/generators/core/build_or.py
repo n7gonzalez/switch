@@ -198,7 +198,6 @@ def define_components(mod):
     mod.gen_is_baseload = Param(mod.GENERATION_PROJECTS, within=Boolean)
     mod.gen_is_cogen = Param(mod.GENERATION_PROJECTS, within=Boolean, default=False)
     mod.gen_is_distributed = Param(mod.GENERATION_PROJECTS, within=Boolean, default=False)
-    mod.gen_dispatch_minimum = Param(mod.GENERATION_PROJECTS, within=NonNegativeReals, default=0)
     mod.gen_scheduled_outage_rate = Param(mod.GENERATION_PROJECTS,
         within=PercentFraction, default=0)
     mod.gen_forced_outage_rate = Param(mod.GENERATION_PROJECTS,
@@ -456,7 +455,7 @@ def load_inputs(mod, switch_data, inputs_dir):
         optional_params=['gen_dbid', 'gen_scheduled_outage_rate',
         'gen_forced_outage_rate', 'gen_capacity_limit_mw', 'gen_unit_size',
         'gen_ccs_energy_load', 'gen_ccs_capture_efficiency', 
-        'gen_min_build_capacity', 'gen_is_cogen', 'gen_is_distributed', 'gen_dispatch_minimum'],
+        'gen_min_build_capacity', 'gen_is_cogen', 'gen_is_distributed'],
         index=mod.GENERATION_PROJECTS,
         param=(mod.gen_dbid, mod.gen_tech, mod.gen_energy_source,
                mod.gen_load_zone, mod.gen_max_age, mod.gen_is_variable,
@@ -466,7 +465,7 @@ def load_inputs(mod, switch_data, inputs_dir):
                mod.gen_ccs_capture_efficiency, mod.gen_full_load_heat_rate, 
                mod.gen_variable_om, mod.gen_min_build_capacity,
                mod.gen_connect_cost_per_mw, mod.gen_is_cogen,
-               mod.gen_is_distributed, mod.gen_dispatch_minimum))
+               mod.gen_is_distributed))
     # Construct sets of capacity-limited, ccs-capable and unit-size-specified
     # projects. These sets include projects for which these parameters have
     # a value

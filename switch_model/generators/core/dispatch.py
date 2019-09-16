@@ -320,7 +320,8 @@ def load_inputs(mod, switch_data, inputs_dir):
     switch_data.load_aug(
         optional=True,
         filename=os.path.join(inputs_dir, 'variable_capacity_factors.tab'),
-        autoselect=True,
+        #autoselect=True,
+        select=('GENERATION_PROJECT','timepoint','gen_max_capacity_factor'),
         param=(mod.gen_max_capacity_factor))
 
 
