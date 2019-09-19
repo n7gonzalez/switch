@@ -246,11 +246,12 @@ def load_inputs(mod, switch_data, inputs_dir):
     contain additional columns that are used by the load_zones module.
 
     load_zones.tab
-        load_zone, existing_local_td, local_td_annual_cost_per_mw
+        LOAD_ZONE, existing_local_td, local_td_annual_cost_per_mw
 
     """
 
     switch_data.load_aug(
         filename=os.path.join(inputs_dir, 'load_zones.tab'),
-        auto_select=True,
+        #auto_select=True,
+        select=('LOAD_ZONE','existing_local_td','local_td_annual_cost_per_mw'),
         param=(mod.existing_local_td, mod.local_td_annual_cost_per_mw))

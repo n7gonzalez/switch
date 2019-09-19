@@ -60,13 +60,14 @@ def define_components(mod):
     period.
     
     """
-
+    mod.NON_FUEL_ENERGY_SOURCES_RPS_NEW = Set()
     mod.f_rps_eligible = Param(
         mod.FUELS,
         within=Boolean,
         default=False)
     mod.RPS_ENERGY_SOURCES = Set(
-        initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES) | \
+        #initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES) | \
+        initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES_RPS_NEW) | \
             set(f for f in m.FUELS if m.f_rps_eligible[f]))
 
     mod.RPS_PERIODS = Set(
@@ -137,7 +138,10 @@ def load_inputs(mod, switch_data, inputs_dir):
         autoselect=True,
         index=mod.RPS_PERIODS,
         param=(mod.rps_target,))
-
+    switch_data.load_aug(
+        optional=True,
+        filename=os.path.join(inputs_dir, 'non_fuel_energy_sources_rps.tab'),
+        set=('NON_FUEL_ENERGY_SOURCES_RPS_NEW'))
 
 def post_solve(instance, outdir):
     """

@@ -167,8 +167,9 @@ def load_inputs(mod, switch_data, inputs_dir):
     # message if some columns are not found.
     switch_data.load_aug(
         filename=os.path.join(inputs_dir, 'load_zones.tab'),
-        auto_select=True,
+        #auto_select=True,
         index=mod.LOAD_ZONES,
+        select=('LOAD_ZONE','zone_ccs_distance_km','zone_dbid'),       
         param=(mod.zone_ccs_distance_km, mod.zone_dbid))
     switch_data.load_aug(
         filename=os.path.join(inputs_dir, 'loads.tab'),
