@@ -65,10 +65,11 @@ def define_components(mod):
         mod.FUELS,
         within=Boolean,
         default=False)
-    mod.RPS_ENERGY_SOURCES = Set(
+    mod.RPS_ENERGY_SOURCES = Set(initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES_RPS_NEW))
+    #mod.RPS_ENERGY_SOURCES = Set(
         #initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES) | \
-        initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES_RPS_NEW) | \
-            set(f for f in m.FUELS if m.f_rps_eligible[f]))
+    #    initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES) | \
+    #        set(f for f in m.FUELS if m.f_rps_eligible[f]))
 
     mod.RPS_PERIODS = Set(
         validate=lambda m, p: p in m.PERIODS)
@@ -88,16 +89,18 @@ def define_components(mod):
     mod.RPSNonFuelEnergy = Expression(
         mod.RPS_PERIODS,
         rule=lambda m, p: sum(m.DispatchGen[g, t] * m.tp_weight[t]
-            for g in m.NON_FUEL_BASED_GENS 
+            for g in m.NON_FUEL_BASED_GENS
+           #for g in m.NON_FUEL_BASED_GENS_RPS
                 for t in m.TPS_FOR_GEN_IN_PERIOD[g, p]))
 
     mod.RPSEnforceTargetSlack = Var(mod.RPS_PERIODS, within=NonNegativeReals)
 
     mod.RPS_Enforce_Target = Constraint(
         mod.RPS_PERIODS,
-        rule=lambda m, p: (m.RPSFuelEnergy[p] + m.RPSNonFuelEnergy[p] + m.RPSEnforceTargetSlack[p] >=
-            m.rps_target[p] * total_demand_in_period(m, p)))
-
+        #rule=lambda m, p: (m.RPSFuelEnergy[p] + m.RPSNonFuelEnergy[p] + m.RPSEnforceTargetSlack[p] >=    
+        #    m.rps_target[p] * total_demand_in_period(m, p)))
+        rule=lambda m, p: (m.RPSFuelEnergy[p] + m.RPSNonFuelEnergy[p] + m.RPSEnforceTargetSlack[p] >=    
+            m.rps_target[p] *total_generation_in_period(m, p)))
 
 def total_generation_in_period(model, period):
     return sum(

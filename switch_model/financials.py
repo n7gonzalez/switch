@@ -297,7 +297,7 @@ def define_dynamic_components(mod):
     # The model can check for the SET created by each module as a shorthand for checking the existence of that module.
     # This avoids a null pointer error.
     def System_Cost_rule(m):
-        SLACK_VARIABLE_PENALTY = 1000000000000
+        SLACK_VARIABLE_PENALTY = 100000000000000
         system_cost = sum(m.SystemCostPerPeriod[p] for p in m.PERIODS)
         system_cost += SLACK_VARIABLE_PENALTY*(sum(m.LoadZonePositive[zt] + m.LoadZoneNegative[zt] for zt in m.ZONE_TIMEPOINTS))
         # transmission.transport.build
@@ -317,9 +317,9 @@ def define_dynamic_components(mod):
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.EVCumulativeChargeUpperSlack[zt] + m.EVCumulativeChargeLowerSlack[zt] for zt in m.LOAD_ZONES * m.TIMEPOINTS)
         if 'PERIOD_ENERGY_MIN' in dir(m):
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.RPSCapacityMaxSlack[pe] + m.RPSCapacityMinSlack[pe] for pe in m.PERIOD_ENERGY_MIN)
-        #if 'HYDRO_GEN_TS' in dir(m):
+        if 'HYDRO_GEN_TS' in dir(m):
             #system_cost += SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMinSlack[gt] for gt in m.HYDRO_GEN_TPS)+SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMaxSlackPositive[gt]+m.HydroEnfroceMaxSlackNegative[gt] for gt in m.HYDRO_GEN_TPS)
-            #system_cost += SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMinSlack[gt] for gt in m.HYDRO_GEN_TPS)
+            system_cost += SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMinSlack[gt] for gt in m.HYDRO_GEN_TPS)
         return system_cost
 
     mod.SystemCost = Expression(

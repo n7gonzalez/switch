@@ -235,6 +235,15 @@ def define_components(mod):
         initialize=lambda m, g: (
             m.gen_energy_source[g] in m.FUELS 
                 or m.gen_energy_source[g] == "multiple"))
+ 
+    mod.gen_uses_fuel_RPS = Param(
+        mod.GENERATION_PROJECTS,
+        initialize=lambda m, g: (
+            m.gen_energy_source[g] in m.NON_FUEL_ENERGY_SOURCES_RPS_NEW ))
+    mod.NON_FUEL_BASED_GENS_RPS = Set(
+        initialize=mod.GENERATION_PROJECTS,
+        filter=lambda m, g: not m.gen_uses_fuel_RPS[g])
+           
     mod.NON_FUEL_BASED_GENS = Set(
         initialize=mod.GENERATION_PROJECTS,
         filter=lambda m, g: not m.gen_uses_fuel[g])
