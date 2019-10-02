@@ -59,17 +59,41 @@ def define_components(mod):
     renewable sources to meet a fraction of the total energy produced in the
     period.
     
+    NON_FUEL_RPS_NEW is a set including the wind, solar, water, gerthermal.
+    
+    gen_energy_source[g] describes what kind of energy sources a generation projects is using.
+    
+    gen_uses_fuel_rps[g] is a set that includes the generation projects noly using non fuel as resources.
     """
-    mod.NON_FUEL_ENERGY_SOURCES_RPS_NEW = Set()
+    #########
+    #I have updated in Thur
+    mod.NON_FUEL_RPS_NEW = Set()
+
+    mod.gen_uses_fuel_rps = Param(
+        mod.GENERATION_PROJECTS,
+        initialize=lambda m, g: (
+            m.gen_energy_source[g] in m.NON_FUEL_RPS_NEW ))
+
+    mod.NON_FUEL_BASED_GENS_RPS = Set(
+        initialize=mod.GENERATION_PROJECTS,
+        filter=lambda m, g: m.gen_uses_fuel_rps[g])
+
+    #mod.ENERGY_SOURCES_RPS = Set(
+    #    initialize=mod.NON_FUEL_RPS_NEW)
+    #mod.min_data_check('ENERGY_SOURCES_RPS')
+
+
+    ##########
+
     mod.f_rps_eligible = Param(
         mod.FUELS,
         within=Boolean,
         default=False)
-    mod.RPS_ENERGY_SOURCES = Set(initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES_RPS_NEW))
-    #mod.RPS_ENERGY_SOURCES = Set(
+    
+    mod.RPS_ENERGY_SOURCES = Set(
         #initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES) | \
-    #    initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES) | \
-    #        set(f for f in m.FUELS if m.f_rps_eligible[f]))
+        initialize=lambda m: set(m.NON_FUEL_ENERGY_SOURCES) | \
+            set(f for f in m.FUELS if m.f_rps_eligible[f]))
 
     mod.RPS_PERIODS = Set(
         validate=lambda m, p: p in m.PERIODS)
@@ -86,20 +110,37 @@ def define_components(mod):
                 m.tp_weight[t]
                     for g in m.FUEL_BASED_GENS 
                         for t in m.TPS_FOR_GEN_IN_PERIOD[g, p]))
+    
+    mod.RPSNonFuelEnergy = Expression(
+        mod.RPS_PERIODS,
+        rule=lambda m, p: sum(m.DispatchGen[g, t] * m.tp_weight[t]
+            #for g in m.NON_FUEL_BASED_GENS
+            for g in m.NON_FUEL_BASED_GENS_RPS
+                for t in m.TPS_FOR_GEN_IN_PERIOD[g, p]))
+    
+    #m.NON_FUEL_BASED_GENS belongs to the non fuel energy.tab, but it also include the storage
+    """
     mod.RPSNonFuelEnergy = Expression(
         mod.RPS_PERIODS,
         rule=lambda m, p: sum(m.DispatchGen[g, t] * m.tp_weight[t]
             for g in m.NON_FUEL_BASED_GENS
-           #for g in m.NON_FUEL_BASED_GENS_RPS
+            #for g in m.NON_FUEL_BASED_GENS_RPS
                 for t in m.TPS_FOR_GEN_IN_PERIOD[g, p]))
-
+    """
     mod.RPSEnforceTargetSlack = Var(mod.RPS_PERIODS, within=NonNegativeReals)
 
     mod.RPS_Enforce_Target = Constraint(
         mod.RPS_PERIODS,
+        #it is the original codes, but RPSNonfuelEnergy is from set NON_FUEL_BASED_GENS, from generator.build
+        #finally is from m.fuel that is from fuel.tab, it include all fossil fuel energy.
+        #so the I think it is wrong. 
+        #the correct equation should be m.RPSFuelEnergy[p] represents the nuclear. m.RPSNonFuelEnergy[p] should come from wind, solar
+        #I add the set and change the set of expression RPSNonFuelEnergy.
         #rule=lambda m, p: (m.RPSFuelEnergy[p] + m.RPSNonFuelEnergy[p] + m.RPSEnforceTargetSlack[p] >=    
         #    m.rps_target[p] * total_demand_in_period(m, p)))
-        rule=lambda m, p: (m.RPSFuelEnergy[p] + m.RPSNonFuelEnergy[p] + m.RPSEnforceTargetSlack[p] >=    
+        
+        #rule=lambda m, p: (m.RPSFuelEnergy[p] + m.RPSNonFuelEnergy[p] + m.RPSEnforceTargetSlack[p] >=    
+        rule=lambda m, p: (m.RPSNonFuelEnergy[p] + m.RPSEnforceTargetSlack[p] >= 
             m.rps_target[p] *total_generation_in_period(m, p)))
 
 def total_generation_in_period(model, period):
@@ -141,11 +182,17 @@ def load_inputs(mod, switch_data, inputs_dir):
         autoselect=True,
         index=mod.RPS_PERIODS,
         param=(mod.rps_target,))
+    #it is used to define the non fossil fuel, wind solar, bioenergy, and gerthermal
+    switch_data.load_aug(
+        #optional=True,
+    	filename=os.path.join(inputs_dir, 'non_fuel_energy_sources_rps.tab'),
+    	set=('NON_FUEL_RPS_NEW'))
+    """
     switch_data.load_aug(
         optional=True,
         filename=os.path.join(inputs_dir, 'non_fuel_energy_sources_rps.tab'),
         set=('NON_FUEL_ENERGY_SOURCES_RPS_NEW'))
-
+    """
 def post_solve(instance, outdir):
     """
     Export energy statistics relevant to RPS studies.
