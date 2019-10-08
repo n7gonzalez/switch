@@ -84,6 +84,11 @@ def post_solve(model, outdir):
         row.append(model.carbon_cost_dollar_per_tco2[period])
         row.append(model.carbon_cost_dollar_per_tco2[period] * \
                    model.AnnualEmissions[period])
+        #Bo Li edited in 2019-10-03
+        row.append(model.NOx_AnnualEmissions[period])
+        row.append(model.SO2_AnnualEmissions[period])
+        row.append(model.PM25_AnnualEmissions[period])
+        #Bo Li edited in 2019-10-03            
         return row
 
     reporting.write_table(
@@ -91,5 +96,6 @@ def post_solve(model, outdir):
         output_file=os.path.join(outdir, "emissions.txt"),
         headings=("PERIOD", "AnnualEmissions_tCO2_per_yr", 
                   "carbon_cap_tco2_per_yr", "carbon_cap_dual_future_dollar_per_tco2",
-                  "carbon_cost_dollar_per_tco2", "carbon_cost_annual_total"),
+                  "carbon_cost_dollar_per_tco2", "carbon_cost_annual_total","AnnualEmissions_tNOx_per_yr",
+                  "AnnualEmissions_tSO2_per_yr","AnnualEmissions_tPM25_per_yr"),
         values=get_row)

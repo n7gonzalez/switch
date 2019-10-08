@@ -90,7 +90,11 @@ def define_components(mod):
 
     """
 
+
+
     mod.NON_FUEL_ENERGY_SOURCES = Set()
+
+
     mod.FUELS = Set()
     mod.f_co2_intensity = Param(mod.FUELS, within=NonNegativeReals)
     mod.f_upstream_co2_intensity = Param(
@@ -99,6 +103,12 @@ def define_components(mod):
     # Ensure that fuel and non-fuel sets have no overlap.
     mod.e_source_is_fuel_or_not_check = BuildCheck(
         rule=lambda m: len(m.FUELS & m.NON_FUEL_ENERGY_SOURCES) == 0)
+        
+    #SO2, NOx,PM2.5 is introduced to the properties
+    mod.f_NOx_intensity = Param(mod.FUELS, within=NonNegativeReals)
+    mod.f_SO2_intensity = Param(mod.FUELS, within=NonNegativeReals)
+    mod.f_PM25_intensity = Param(mod.FUELS, within=NonNegativeReals)       
+    #SO2, NOx,PM2.5 is introduced to the properties
 
     # ENERGY_SOURCES is the union of fuel and non-fuels sets. Pipe | is
     # the union operator for Pyomo sets.
@@ -106,7 +116,8 @@ def define_components(mod):
         initialize=mod.NON_FUEL_ENERGY_SOURCES | mod.FUELS)
     mod.min_data_check('ENERGY_SOURCES')
 
-
+    #mod.ENERGY_SOURCES_RPS = Set(
+     #   initialize=mod.NON_FUEL_ENERGY_SOURCES_RPS_NEW)
 def load_inputs(mod, switch_data, inputs_dir):
     """
 
@@ -143,6 +154,7 @@ def load_inputs(mod, switch_data, inputs_dir):
     switch_data.load_aug(
         optional=True,
         filename=os.path.join(inputs_dir, 'fuels.tab'),
-        select=('fuel', 'co2_intensity', 'upstream_co2_intensity'),
+        select=('fuel', 'co2_intensity', 'upstream_co2_intensity','NOx_intensity','SO2_intensity','PM25_intensity'),
         index=mod.FUELS,
-        param=(mod.f_co2_intensity, mod.f_upstream_co2_intensity))
+        param=(mod.f_co2_intensity, mod.f_upstream_co2_intensity,mod.f_NOx_intensity,mod.f_SO2_intensity,mod.f_PM25_intensity))
+

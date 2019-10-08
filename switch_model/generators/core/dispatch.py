@@ -285,6 +285,45 @@ def define_components(mod):
                 m.GenFuelUseRate[g, t, f] *
                 (m.f_co2_intensity[f] * ccs_emission_frac +
                  m.f_upstream_co2_intensity[f]))
+    #Bo Li edited in 2019 -10-03
+    #NOx, SO2, PM2.5 emission          
+    def NOx_DispatchEmissions_rule(m, g, t, f):
+        return (m.GenFuelUseRate[g, t, f] *(m.f_NOx_intensity[f]))
+    def SO2_DispatchEmissions_rule(m, g, t, f):
+        return (m.GenFuelUseRate[g, t, f] *(m.f_SO2_intensity[f]))
+    def PM25_DispatchEmissions_rule(m, g, t, f):
+        return (m.GenFuelUseRate[g, t, f] *(m.f_PM25_intensity[f]))
+
+    mod.NOx_DispatchEmissions = Expression(
+        mod.GEN_TP_FUELS,
+        rule=NOx_DispatchEmissions_rule)
+    mod.NOx_AnnualEmissions = Expression(mod.PERIODS,
+        rule=lambda m, period: sum(
+            m.NOx_DispatchEmissions[g, t, f] * m.tp_weight_in_year[t]
+            for (g, t, f) in m.GEN_TP_FUELS
+            if m.tp_period[t] == period),
+        doc="The system's annual emissions, in metric tonnes of NOx per year.")
+    
+    mod.SO2_DispatchEmissions = Expression(
+        mod.GEN_TP_FUELS,
+        rule=SO2_DispatchEmissions_rule)
+    mod.SO2_AnnualEmissions = Expression(mod.PERIODS,
+        rule=lambda m, period: sum(
+            m.SO2_DispatchEmissions[g, t, f] * m.tp_weight_in_year[t]
+            for (g, t, f) in m.GEN_TP_FUELS
+            if m.tp_period[t] == period),
+        doc="The system's annual emissions, in metric tonnes of SO2 per year.")
+    mod.PM25_DispatchEmissions = Expression(
+        mod.GEN_TP_FUELS,
+        rule=PM25_DispatchEmissions_rule)
+    mod.PM25_AnnualEmissions = Expression(mod.PERIODS,
+        rule=lambda m, period: sum(
+            m.PM25_DispatchEmissions[g, t, f] * m.tp_weight_in_year[t]
+            for (g, t, f) in m.GEN_TP_FUELS
+            if m.tp_period[t] == period),
+        doc="The system's annual emissions, in metric tonnes of PM25 per year.")    
+    #Bo Li edited in 2019 -10-03
+    #      
     mod.DispatchEmissions = Expression(
         mod.GEN_TP_FUELS,
         rule=DispatchEmissions_rule)
