@@ -4,4 +4,4 @@ ResidualFuelOil	0.0788	0	0	0	0
 DistillateFuelOil	0.07315	0	0	0	0
 NaturalGas	0.05306	0	0	0	0
 Uranium	0	.	0	0	0
-BioSolid	0.09435	-0.09435	0	0	0
+BioSolid	0.09435	-0.09435	0.01	0	0
