@@ -98,7 +98,7 @@ def define_components(mod):
         rule=lambda m, g, ts: \
           sum(m.DispatchGen[g, t]+m.HydroEnfroceMaxSlackPositive[g, t] for t in m.TPS_IN_TS[ts]) / m.ts_num_tps[ts]
            #  sum(m.DispatchGen[g, t]+m.HydroEnfroceMaxSlackPositive[g, t]-m.HydroEnfroceMaxSlackNegative[g,t] for t in m.TPS_IN_TS[ts]) / m.ts_num_tps[ts]
-            == m.hydro_avg_flow_mw[g, ts] )
+            == m.hydro_avg_flow_mw[g, ts])
     
     mod.min_data_check('hydro_min_flow_mw', 'hydro_avg_flow_mw')
 
