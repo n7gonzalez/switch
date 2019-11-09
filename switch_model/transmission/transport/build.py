@@ -213,11 +213,15 @@ def define_components(mod):
             return (model.existing_trans_cap[tx],
                     model.existing_trans_cap[tx])
         else:
-            return (0, None)
+            #return (0, None)
+            return (0, 5*model.existing_trans_cap[tx])  #edited by bo in 2019-11-07
     mod.BuildTx = Var(
         mod.BLD_YRS_FOR_TX,
         within=NonNegativeReals,
         bounds=bounds_BuildTx)
+    #the constraints of transmission lines edited in 2019-11-07 by bo
+    
+
     mod.TxCapacityNameplate = Expression(
         mod.TRANSMISSION_LINES, mod.PERIODS,
         rule=lambda m, tx, period: sum(
