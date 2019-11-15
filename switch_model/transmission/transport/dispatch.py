@@ -53,12 +53,13 @@ def define_components(mod):
         initialize=lambda m: m.DIRECTIONAL_TX * m.TIMEPOINTS
     )
     mod.DispatchTx = Var(mod.TRANS_TIMEPOINTS, within=NonNegativeReals)
-
-    mod.MaximumDispatchTxSlack = Var(mod.TRANS_TIMEPOINTS, within=NonNegativeReals)
+    #edited by bo 2019-11-14
+    #mod.MaximumDispatchTxSlack = Var(mod.TRANS_TIMEPOINTS, within=NonNegativeReals)
     mod.Maximum_DispatchTx = Constraint(
         mod.TRANS_TIMEPOINTS,
         rule=lambda m, zone_from, zone_to, tp: (
-            m.DispatchTx[zone_from, zone_to, tp] + m.MaximumDispatchTxSlack[zone_from, zone_to, tp] <=
+            #m.DispatchTx[zone_from, zone_to, tp] + m.MaximumDispatchTxSlack[zone_from, zone_to, tp] <=
+            m.DispatchTx[zone_from, zone_to, tp]  <=            
             m.TxCapacityNameplateAvailable[m.trans_d_line[zone_from, zone_to],
                                      m.tp_period[tp]]))
 

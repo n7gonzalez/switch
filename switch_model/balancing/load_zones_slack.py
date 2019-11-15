@@ -97,9 +97,9 @@ def define_components(mod):
         mod.Distributed_Power_Withdrawals.append('zone_demand_mw')
     else:
         mod.Zone_Power_Withdrawals.append('zone_demand_mw')
-    #edited by bo, 2019-11-14
-    #mod.LoadZonePositive = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
-    #mod.LoadZoneNegative = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
+
+    mod.LoadZonePositive = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
+    mod.LoadZoneNegative = Var(mod.ZONE_TIMEPOINTS, within=NonNegativeReals)
 
     mod.EXTERNAL_COINCIDENT_PEAK_DEMAND_ZONE_PERIODS = Set(
         dimen=2, within=mod.LOAD_ZONES * mod.PERIODS,
@@ -129,16 +129,14 @@ def define_dynamic_components(mod):
     has units of MW - and ensures they are equal. The term tp_duration_hrs
     is factored out of the equation for brevity.
     """
-    #edited by bo, 2019-11-14
+
     mod.Zone_Energy_Balance = Constraint(
         mod.ZONE_TIMEPOINTS,
         rule=lambda m, z, t: (
             sum(
                 getattr(m, component)[z, t]
                 for component in m.Zone_Power_Injections
-            #) + m.LoadZonePositive[z, t] - m.LoadZoneNegative[z, t] == sum(
-            ) == sum(
-               
+            ) + m.LoadZonePositive[z, t] - m.LoadZoneNegative[z, t] == sum(
                 getattr(m, component)[z, t]
                 for component in m.Zone_Power_Withdrawals)))
 
