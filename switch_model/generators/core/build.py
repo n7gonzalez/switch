@@ -282,13 +282,15 @@ def define_components(mod):
         mod.PREDETERMINED_GEN_BLD_YRS,
         within=NonNegativeReals)
     mod.min_data_check('gen_predetermined_cap')
-    
+    #edited bu bo 2019-11
+    #mod.gen_max_age_retirement = Var(mod.GENERATION_PROJECTS, within=PositiveIntegers,bounds=(0,40))
 
     def _gen_build_can_operate_in_period(m, g, build_year, period):
         if build_year in m.PERIODS:
-            online = m.period_start[build_year]
+            online = m.period_start[build_year]#-m.gen_max_age_retirement[g]
         else:
             online = build_year
+        #retirement = online + m.gen_max_age[g]-m.gen_max_age_retirement[g]
         retirement = online + m.gen_max_age[g]
         return (
             online <= m.period_start[period] < retirement
@@ -316,6 +318,8 @@ def define_components(mod):
 
     def bounds_BuildGen(model, g, bld_yr):
         if((g, bld_yr) in model.PREDETERMINED_GEN_BLD_YRS):
+            #return (model.gen_predetermined_cap[g, bld_yr],
+            #        model.gen_predetermined_cap[g, bld_yr])
             return (model.gen_predetermined_cap[g, bld_yr],
                     model.gen_predetermined_cap[g, bld_yr])
         elif(g in model.CAPACITY_LIMITED_GENS):
@@ -324,10 +328,25 @@ def define_components(mod):
             return (0, model.gen_capacity_limit_mw[g])
         else:
             return (0, None)
+
+    def bounds_BuildGen_retirement(model, g, bld_yr):
+        if((g, bld_yr) in model.PREDETERMINED_GEN_BLD_YRS):
+            #return (model.gen_predetermined_cap[g, bld_yr],
+            #        model.gen_predetermined_cap[g, bld_yr])
+            return (0,model.gen_predetermined_cap[g, bld_yr])
+        elif(g in model.CAPACITY_LIMITED_GENS):
+            # This does not replace Max_Build_Potential because
+            # Max_Build_Potential applies across all build years.
+            return (0, model.gen_capacity_limit_mw[g])
+        else:
+            return (0, None)
+
     mod.BuildGen = Var(
         mod.GEN_BLD_YRS,
         within=NonNegativeReals,
         bounds=bounds_BuildGen)
+
+    
     # Some projects are retired before the first study period, so they
     # don't appear in the objective function or any constraints. 
     # In this case, pyomo may leave the variable value undefined even 
@@ -336,11 +355,11 @@ def define_components(mod):
     # expects every variable to have a value after the solve. So as a 
     # starting point we assign an appropriate value to all the existing 
     # projects here.
-    def BuildGen_assign_default_value(m, g, bld_yr):
-        m.BuildGen[g, bld_yr] = m.gen_predetermined_cap[g, bld_yr]
-    mod.BuildGen_assign_default_value = BuildAction(
-        mod.PREDETERMINED_GEN_BLD_YRS,
-        rule=BuildGen_assign_default_value)
+    #def BuildGen_assign_default_value(m, g, bld_yr):
+        #m.BuildGen[g, bld_yr] = m.gen_predetermined_cap[g, bld_yr]#-m.BuildGen_retirement[g,bld_yr]
+    #mod.BuildGen_assign_default_value = BuildAction(
+    #    mod.PREDETERMINED_GEN_BLD_YRS,
+    #    rule=BuildGen_assign_default_value)
 
     mod.GEN_PERIODS = Set(
         dimen=2,
@@ -351,13 +370,13 @@ def define_components(mod):
             m.BuildGen[g, bld_yr]
             for bld_yr in m.BLD_YRS_FOR_GEN_PERIOD[g, period]))
 
-    mod.MaxBuildPotentialSlack = Var(mod.CAPACITY_LIMITED_GENS * mod.PERIODS, within=NonNegativeReals)
+    #mod.MaxBuildPotentialSlack = Var(mod.CAPACITY_LIMITED_GENS * mod.PERIODS, within=NonNegativeReals)
 
     mod.Max_Build_Potential = Constraint(
         mod.CAPACITY_LIMITED_GENS, mod.PERIODS,
         rule=lambda m, g, p: (
-            m.gen_capacity_limit_mw[g] + m.MaxBuildPotentialSlack[g, p] >= m.GenCapacity[g, p]))
-
+            #m.gen_capacity_limit_mw[g] + m.MaxBuildPotentialSlack[g, p] >= m.GenCapacity[g, p]))
+            m.gen_capacity_limit_mw[g] >= m.GenCapacity[g, p]))
     # The following components enforce minimum capacity build-outs.
     # Note that this adds binary variables to the model.
     mod.gen_min_build_capacity = Param (mod.GENERATION_PROJECTS,

@@ -306,7 +306,7 @@ def define_dynamic_components(mod):
         if 'MaximumDispatchTxSlack[t]' in dir(m):
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.MaximumDispatchTxSlack[t] for t in m.TRANS_TIMEPOINTS)
         # generators.core.build
-        if 'CAPACITY_LIMITED_GENS' in dir(m):
+        if 'MaxBuildPotentialSlack[gp]' in dir(m):
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.MaxBuildPotentialSlack[gp] for gp in m.CAPACITY_LIMITED_GENS * m.PERIODS)
         # policies.rps_simple
         if 'RPSEnforceTargetSlack[p]' in dir(m):
