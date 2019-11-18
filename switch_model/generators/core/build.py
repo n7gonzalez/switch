@@ -333,7 +333,7 @@ def define_components(mod):
         if((g, bld_yr) in model.PREDETERMINED_GEN_BLD_YRS):
             #return (model.gen_predetermined_cap[g, bld_yr],
             #        model.gen_predetermined_cap[g, bld_yr])
-            return (0,model.gen_predetermined_cap[g, bld_yr])
+            return (model.gen_predetermined_cap[g, bld_yr],model.gen_predetermined_cap[g, bld_yr])
         elif(g in model.CAPACITY_LIMITED_GENS):
             # This does not replace Max_Build_Potential because
             # Max_Build_Potential applies across all build years.
@@ -355,11 +355,11 @@ def define_components(mod):
     # expects every variable to have a value after the solve. So as a 
     # starting point we assign an appropriate value to all the existing 
     # projects here.
-    #def BuildGen_assign_default_value(m, g, bld_yr):
-        #m.BuildGen[g, bld_yr] = m.gen_predetermined_cap[g, bld_yr]#-m.BuildGen_retirement[g,bld_yr]
-    #mod.BuildGen_assign_default_value = BuildAction(
-    #    mod.PREDETERMINED_GEN_BLD_YRS,
-    #    rule=BuildGen_assign_default_value)
+    def BuildGen_assign_default_value(m, g, bld_yr):
+        m.BuildGen[g, bld_yr] = m.gen_predetermined_cap[g, bld_yr] #-m.BuildGen_retirement[g,bld_yr]
+    mod.BuildGen_assign_default_value = BuildAction(
+        mod.PREDETERMINED_GEN_BLD_YRS,
+        rule=BuildGen_assign_default_value)
 
     mod.GEN_PERIODS = Set(
         dimen=2,

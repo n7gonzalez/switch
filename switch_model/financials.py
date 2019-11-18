@@ -320,7 +320,7 @@ def define_dynamic_components(mod):
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.EVCumulativeChargeUpperSlack[zt] + m.EVCumulativeChargeLowerSlack[zt] for zt in m.LOAD_ZONES * m.TIMEPOINTS)
         if 'RPSCapacityMaxSlack[pe]' in dir(m):
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.RPSCapacityMaxSlack[pe] + m.RPSCapacityMinSlack[pe] for pe in m.PERIOD_ENERGY_MIN)
-        if 'HYDRO_GEN_TS' in dir(m):
+        if 'HydroEnfroceMinSlack[gt]' in dir(m):
             #system_cost += SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMinSlack[gt] for gt in m.HYDRO_GEN_TPS)+SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMaxSlackPositive[gt]+m.HydroEnfroceMaxSlackNegative[gt] for gt in m.HYDRO_GEN_TPS)
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMinSlack[gt] for gt in m.HYDRO_GEN_TPS)
         return system_cost

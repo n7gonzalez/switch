@@ -77,7 +77,7 @@ def define_components(mod):
     # valid timepoint.
     mod.HydroEnfroceMinSlack=Var(mod.HYDRO_GEN_TPS, within=NonNegativeReals)
     mod.HydroEnfroceMaxSlackPositive=Var(mod.HYDRO_GEN_TPS, within=NonNegativeReals)
-    mod.HydroEnfroceMaxSlackNegative=Var(mod.HYDRO_GEN_TPS, within=NonNegativeReals)
+    #mod.HydroEnfroceMaxSlackNegative=Var(mod.HYDRO_GEN_TPS, within=NonNegativeReals)
 
     mod.hydro_min_flow_mw = Param(
         mod.HYDRO_GEN_TS,
