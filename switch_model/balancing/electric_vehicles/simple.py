@@ -98,19 +98,21 @@ def define_components(mod):
                 if tau <= t)
         )
 
-    mod.EVCumulativeChargeUpperSlack = Var(mod.LOAD_ZONES * mod.TIMEPOINTS, within=NonNegativeReals)
+    #mod.EVCumulativeChargeUpperSlack = Var(mod.LOAD_ZONES * mod.TIMEPOINTS, within=NonNegativeReals)
 
     mod.EV_Cumulative_Charge_Upper_Limit =  Constraint(
         mod.LOAD_ZONES, mod.TIMEPOINTS,
         rule=lambda m, z, t:
-        m.EVCumulativeCharge[z,t] - m.EVCumulativeChargeUpperSlack[z, t] <= m.ev_cumulative_charge_upper_mwh[z,t]) 
+        #m.EVCumulativeCharge[z,t] - m.EVCumulativeChargeUpperSlack[z, t] <= m.ev_cumulative_charge_upper_mwh[z,t]) 
+        m.EVCumulativeCharge[z,t]  <= m.ev_cumulative_charge_upper_mwh[z,t]) 
 
-    mod.EVCumulativeChargeLowerSlack = Var(mod.LOAD_ZONES * mod.TIMEPOINTS, within=NonNegativeReals)
+    #mod.EVCumulativeChargeLowerSlack = Var(mod.LOAD_ZONES * mod.TIMEPOINTS, within=NonNegativeReals)
 
     mod.Vbat_Cumulative_Charge_Lower_Limit =  Constraint(
         mod.LOAD_ZONES, mod.TIMEPOINTS,
         rule=lambda m, z, t:
-        m.EVCumulativeCharge[z,t] + m.EVCumulativeChargeLowerSlack[z, t] >= m.ev_cumulative_charge_lower_mwh[z,t]) 
+        #m.EVCumulativeCharge[z,t] + m.EVCumulativeChargeLowerSlack[z, t] >= m.ev_cumulative_charge_lower_mwh[z,t]) 
+        m.EVCumulativeCharge[z,t] >= m.ev_cumulative_charge_lower_mwh[z,t]) 
 
     if 'Distributed_Power_Injections' in dir(mod):
         mod.Distributed_Power_Withdrawals.append('EVCharge')

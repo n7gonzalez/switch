@@ -316,13 +316,13 @@ def define_dynamic_components(mod):
         if 'EnforceFuelUnavailabilityPos[gtf]' in dir(m):   
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.EnforceFuelUnavailabilityPos[gtf] + m.EnforceFuelUnavailabilityNeg[gtf] for gtf in m.GEN_TP_FUELS_UNAVAILABLE)
         # balancing.electric_vehicles.simple
-        if 'EVCumulativeChargeUpperSlack' in dir(m):
+        if 'EVCumulativeChargeUpperSlack[zt]' in dir(m):
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.EVCumulativeChargeUpperSlack[zt] + m.EVCumulativeChargeLowerSlack[zt] for zt in m.LOAD_ZONES * m.TIMEPOINTS)
         if 'RPSCapacityMaxSlack[pe]' in dir(m):
             system_cost += SLACK_VARIABLE_PENALTY*sum(m.RPSCapacityMaxSlack[pe] + m.RPSCapacityMinSlack[pe] for pe in m.PERIOD_ENERGY_MIN)
-        if 'HydroEnfroceMinSlack[gt]' in dir(m):
+        #if 'HydroEnfroceMinSlack[gt]' in dir(m):
             #system_cost += SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMinSlack[gt] for gt in m.HYDRO_GEN_TPS)+SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMaxSlackPositive[gt]+m.HydroEnfroceMaxSlackNegative[gt] for gt in m.HYDRO_GEN_TPS)
-            system_cost += SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMinSlack[gt] for gt in m.HYDRO_GEN_TPS)
+            #system_cost += SLACK_VARIABLE_PENALTY*sum(m.HydroEnfroceMinSlack[gt] for gt in m.HYDRO_GEN_TPS)
         return system_cost
 
     mod.SystemCost = Expression(
