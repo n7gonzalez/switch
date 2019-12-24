@@ -194,7 +194,8 @@ def define_components(model):
         if not m.gen_can_provide_cap_reserves[g]:
             return 0.0
         elif g in m.VARIABLE_GENS:
-            return m.gen_max_capacity_factor[g, t]
+            #return m.gen_max_capacity_factor[g, t]
+            return max(0.0,m.gen_max_capacity_factor[g, t])
         else:
             return 1.0
     model.gen_capacity_value = Param(
@@ -224,7 +225,7 @@ def define_components(model):
         for g in GENS:
             # Storage is only credited with its expected output
             if 'STORAGE_GENS' in dir(m) and g in m.STORAGE_GENS:
-                reserve_cap += DispatchGen[g, t]
+                reserve_cap += m.DispatchGen[g, t]
             # If local_td is included with DER modeling, avoid allocating
             # distributed generation to central grid capacity because it will
             # be credited with adjusting load at the distribution node.

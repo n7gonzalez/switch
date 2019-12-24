@@ -102,7 +102,8 @@ def define_components(mod):
     mod.Curtailment_Rate = Constraint(
     	mod.PERIOD_Curtailment_MAX,
     	rule=lambda m, p, e: (
-    		sum(m.Curtailment[g, t] * m.tp_weight[t] for (g,t) in m.GENERATION_PROJECTS*m.TPS_IN_PERIOD[p] if m.gen_energy_source[g] == e) <= m.max_curtailment_Rate[p, e] * sum(m.DispatchUpperLimit[g, t] * m.tp_weight[t] for (g,t) in m.GENERATION_PROJECTS*m.TPS_IN_PERIOD[p] if m.gen_energy_source[g] == e)))
+    		sum(m.Curtailment[g, t] * m.tp_weight[t] for (g,t) in m.GENERATION_PROJECTS*m.TPS_IN_PERIOD[p] if m.gen_energy_source[g] == e) 
+            <= m.max_curtailment_Rate[p, e] * sum(m.DispatchUpperLimit[g, t] * m.tp_weight[t] for (g,t) in m.GENERATION_PROJECTS*m.TPS_IN_PERIOD[p] if m.gen_energy_source[g] == e)))
     """
     mod.Max_Curtailment_Rate = Constraint(
     	mod.PERIOD_Curtailment_MAX,
