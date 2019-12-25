@@ -214,7 +214,7 @@ def define_components(mod):
                     model.existing_trans_cap[tx])
         else:
             #return (0, None)
-            return (0, 5*model.existing_trans_cap[tx])  #edited by bo in 2019-11-07
+            return (0, 4*model.existing_trans_cap[tx])  #edited by bo in 2019-11-07
     mod.BuildTx = Var(
         mod.BLD_YRS_FOR_TX,
         within=NonNegativeReals,

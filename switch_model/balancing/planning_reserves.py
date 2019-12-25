@@ -195,7 +195,7 @@ def define_components(model):
             return 0.0
         elif g in m.VARIABLE_GENS:
             #return m.gen_max_capacity_factor[g, t]
-            return max(0.0,m.gen_max_capacity_factor[g, t])
+            return min(1.0,max(0.0,m.gen_max_capacity_factor[g, t]))
         else:
             return 1.0
     model.gen_capacity_value = Param(
