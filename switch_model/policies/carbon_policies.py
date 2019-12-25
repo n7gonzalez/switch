@@ -88,6 +88,10 @@ def post_solve(model, outdir):
         row.append(model.NOx_AnnualEmissions[period])
         row.append(model.SO2_AnnualEmissions[period])
         row.append(model.PM25_AnnualEmissions[period])
+        row.append(model.PM10_AnnualEmissions[period])
+        row.append(model.PMcoarse_AnnualEmissions[period])
+        row.append(model.CO_AnnualEmissions[period])
+        row.append(model.VOC_AnnualEmissions[period])
         #Bo Li edited in 2019-10-03            
         return row
 
@@ -97,5 +101,6 @@ def post_solve(model, outdir):
         headings=("PERIOD", "AnnualEmissions_tCO2_per_yr", 
                   "carbon_cap_tco2_per_yr", "carbon_cap_dual_future_dollar_per_tco2",
                   "carbon_cost_dollar_per_tco2", "carbon_cost_annual_total","AnnualEmissions_tNOx_per_yr",
-                  "AnnualEmissions_tSO2_per_yr","AnnualEmissions_tPM25_per_yr"),
+                  "AnnualEmissions_tSO2_per_yr","AnnualEmissions_tPM25_per_yr","AnnualEmissions_tPM10_per_yr",
+                  "AnnualEmissions_tPMcoarse_per_yr","AnnualEmissions_tCO_per_yr","AnnualEmissions_tVOC_per_yr"),
         values=get_row)
