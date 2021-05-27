@@ -1,9 +1,9 @@
-# Copyright (c) 2015-2017 The Switch Authors. All rights reserved.
+# Copyright (c) 2015-2019 The Switch Authors. All rights reserved.
 # Licensed under the Apache License, Version 2.0, which is in the LICENSE file.
 
 """
 Defines model components to describe both fuels and non-fuel energy sources
-for the SWITCH-Pyomo model.
+for the Switch model.
 
 """
 
@@ -43,7 +43,7 @@ def define_components(mod):
     including carbon intensity, costs, etc. These are described below.
     Fuels may be abbreviated as f in parameter names and indexes.
 
-    In this formulation of SWITCH, fuels are described in terms of heat
+    In this formulation of Switch, fuels are described in terms of heat
     content rather than mass. This simplifies some aspects of modeling,
     but it could be equally valid to describe fuels in terms of $/mass,
     heat_content/mass (high- heating value and low heating value),
@@ -122,13 +122,13 @@ def load_inputs(mod, switch_data, inputs_dir):
     This could be theoretically derived from any energy sources in the
     generator_energy_sources file that are not listed in the fuels
     table, but that would mean any mispelled fuel or fuel that was
-    unlisted in fuels.tab would be automatically classified as a free
+    unlisted in fuels.csv would be automatically classified as a free
     renewable source.
 
-    non_fuel_energy_sources.tab
+    non_fuel_energy_sources.csv
         energy_source
 
-    fuels.tab
+    fuels.csv
         fuel, co2_intensity, upstream_co2_intensity
 
     """
@@ -138,11 +138,11 @@ def load_inputs(mod, switch_data, inputs_dir):
 
     switch_data.load_aug(
         optional=True,
-        filename=os.path.join(inputs_dir, 'non_fuel_energy_sources.tab'),
+        filename=os.path.join(inputs_dir, 'non_fuel_energy_sources.csv'),
         set=('NON_FUEL_ENERGY_SOURCES'))
     switch_data.load_aug(
         optional=True,
-        filename=os.path.join(inputs_dir, 'fuels.tab'),
+        filename=os.path.join(inputs_dir, 'fuels.csv'),
         select=('fuel', 'co2_intensity', 'upstream_co2_intensity'),
         index=mod.FUELS,
         param=(mod.f_co2_intensity, mod.f_upstream_co2_intensity))

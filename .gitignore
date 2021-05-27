@@ -4,3 +4,7 @@
 .DS_Store
 gurobi.log
 switch_model.egg-info/
+venv
+build*/
+dist*/
+autodoc*

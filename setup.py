@@ -1,12 +1,12 @@
-"""Setup script for SWITCH. 
+"""Setup script for Switch.
 
 Use "pip install --upgrade ." to install a copy in the site packages directory.
 
-Use "pip install --upgrade --editable ." to install SWITCH to be run from its 
+Use "pip install --upgrade --editable ." to install Switch to be run from its
 current location.
 
-Optional dependencies can be added during the initial install or later by 
-running a command like this: 
+Optional dependencies can be added during the initial install or later by
+running a command like this:
 pip install --upgrade --editable .[advanced,database_access]
 
 Use "pip uninstall switch" to uninstall switch from your system.
@@ -31,41 +31,58 @@ setup(
     maintainer='Switch Authors',
     maintainer_email='authors@switch-model.org',
     url='http://switch-model.org',
-    license='Apache v2',
+    license='Apache License 2.0',
     platforms=["any"],
-    description='SWITCH Power System Planning Model',
+    description='Switch Power System Planning Model',
     long_description=read('README'),
+    long_description_content_type="text/markdown",
     classifiers=[
-    'Development Status :: 4 - Beta',
-    'Environment :: Console',
-    'Intended Audience :: Education',
-    'Intended Audience :: End Users/Desktop',
-    'Intended Audience :: Science/Research',
-    'License :: OSI Approved :: Apache Software License',
-    'Natural Language :: English',
-    'Operating System :: Microsoft :: Windows',
-    'Operating System :: MacOS :: MacOS X',
-    'Operating System :: Unix',
-    'Programming Language :: Python',
-    'Programming Language :: Unix Shell',
-    'Topic :: Scientific/Engineering',
-    'Topic :: Software Development :: Libraries :: Python Modules'
+        # from https://pypi.org/classifiers/
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Education',
+        'Intended Audience :: End Users/Desktop',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: Apache Software License',
+        'Natural Language :: English',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: Unix',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Topic :: Scientific/Engineering',
+        'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     packages=find_packages(include=['switch_model', 'switch_model.*']),
     keywords=[
-        'renewable', 'power', 'energy', 'electricity', 
-        'production cost', 'capacity expansion', 
+        'renewable', 'power', 'energy', 'electricity',
+        'production cost', 'capacity expansion',
         'planning', 'optimization'
     ],
+    python_requires='>=2.7.12',
     install_requires=[
-        'Pyomo>=4.4.1', # We need a version that works with glpk 4.60+
+        # Pyomo 4.4.1+ works with glpk 4.60+
+        'Pyomo >=4.4.1, <=5.6.8',
+        # pyutilib 6.0 breaks compatibility, and earlier versions of Pyomo
+        # will cheerfully install it, so we explicitly block it
+        'pyutilib <=5.7.3',
+        'pint',         # needed by Pyomo when we run our tests, but not included
         'testfixtures', # used for standard tests
         'pandas',       # used for input upgrades and testing that functionality
     ],
     extras_require={
         # packages used for advanced demand response, progressive hedging
-        'advanced': ['numpy', 'scipy', 'rpy2', 'sympy'],
-        'database_access': ['psycopg2']
+        # note: rpy2 discontinued support for Python 2 as of rpy2 2.9.0
+        'advanced': [
+            'numpy', 'scipy',
+            'rpy2<2.9.0;python_version<"3.0"',
+            'rpy2;python_version>="3.0"',
+            'sympy'
+        ],
+        'dev': ['ipdb'],
+        'plotting': ['ggplot'],
+        'database_access': ['psycopg2-binary']
     },
     entry_points={
         'console_scripts': ['switch = switch_model.main:main']
