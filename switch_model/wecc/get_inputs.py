@@ -995,7 +995,9 @@ def create_modules_txt():
         for module in modules:
             f.write(module + "\n")
 
-
+# TODO: This file looks crowded to me now. I think for maintainability we need to simplify how
+# we treat the post process. Also, it might be a good idea to have a way to toggle some of
+# the postprocess since the one I just added is optional for a particular work.
 def post_process():
     fix_prebuild_conflict_bug()
     # Graphing post process
@@ -1006,6 +1008,7 @@ def post_process():
     shutil.copy(os.path.join(graph_config, "graph_tech_types.csv"), "graph_tech_types.csv")
     create_graph_timestamp_map()
     replace_plants_in_zone_all()
+    increase_load()
 
 
 def fix_prebuild_conflict_bug():
@@ -1143,6 +1146,25 @@ def replace_plants_in_zone_all():
     replace_rows(plants_to_replace, "gen_build_costs.csv")
     replace_rows(plants_to_replace, "gen_build_predetermined.csv")
 
+
+def increase_load(percentage=0.15):
+    """ Scale the load profile selected by a certain percentage
+
+    Paramters
+    ---------
+    percentage: float
+        Percentage number to scale the load. Ex. 0.15 will increase the load by 15%.
+
+    """
+    # Read load file
+    fname = "loads.csv"
+    df = pd.read_csv(fname)
+
+    df["zone_demand_mw"] = df["zone_demand_mw"] *  (1 + percentage)
+
+    df.to_csv(fname, index=False)
+
+    return
 
 
 if __name__ == "__main__":
