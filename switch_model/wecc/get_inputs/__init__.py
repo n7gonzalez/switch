@@ -1,4 +1,5 @@
-""" Script to retrieve the input data from the switch-wecc database and apply post-processing steps.
+"""
+Script to retrieve the input data from the switch-wecc database and apply post-processing steps.
 """
 import argparse
 import os
@@ -36,7 +37,7 @@ def main():
 
     if not args.post_only:
         query_db(full_config, skip_cf=args.skip_cf)
-    run_post_process(full_config)
+    run_post_process()
     print(f"\nScript took {timer.step_time_as_str()} seconds to build input tables.")
 
 
