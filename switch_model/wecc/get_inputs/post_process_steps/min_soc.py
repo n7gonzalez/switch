@@ -16,7 +16,6 @@ def post_process(func_config):
     """This function sets to zero the column that allows each candidate technology to
     provide"""
 
-    breakpoint()
     min_soc_value = func_config["value"]
 
     fname = "generation_projects_info.csv"
