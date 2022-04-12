@@ -207,6 +207,14 @@ def define_components(mod):
         input_file="generation_projects_info.csv",
         doc="Meters squared of land used per MWh of storage",
     )
+    mod.gen_min_soc = Param(
+        mod.STORAGE_GENS,
+        within=PercentFraction,
+        default=0,
+        input_file="generation_projects_info.csv",
+        input_optional=True,
+        doc="Enforce minimum state of charge for battery storage assets",
+    )
 
     mod.STORAGE_GEN_BLD_YRS = Set(
         dimen=2,
@@ -398,6 +406,18 @@ def define_components(mod):
 
     mod.State_Of_Charge_Upper_Limit = Constraint(
         mod.STORAGE_GEN_TPS, rule=State_Of_Charge_Upper_Limit_rule
+    )
+
+    # NOTE: This piece of code adds a minimum state of charge requirement for the purpuse
+    # of the PRM paper. It might not make it to the stable version
+    def State_Of_Charge_Lower_Limit_rule(m, g, t):
+        return (
+            m.StateOfCharge[g, t]
+            >= m.StorageEnergyCapacity[g, m.tp_period[t]] * m.gen_min_soc[g]
+        )
+
+    mod.State_Of_Charge_Lower_Limit = Constraint(
+        mod.STORAGE_GEN_TPS, rule=State_Of_Charge_Lower_Limit_rule
     )
 
     # batteries can only complete the specified number of cycles per year, averaged over each period
