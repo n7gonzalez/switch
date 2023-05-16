@@ -1,0 +1,146 @@
+scenarios:
+    178_14_12-1week_baseline:
+        name: "178 \nw/1W TS"
+        label: "1 Week"
+        label2: "Baseline"
+    178_16_14-1month_baseline:
+        name: "178 \nw/1M TS"
+        label: "1 Month"
+    178_17_15-2month_baseline:
+        name: "178 \nw/2M TS"
+        label: "2 Month"
+    178_18_16-6month_baseline:
+        name: "178 \nw/6M TS"
+        label: "6 Month"
+    178_19_17-1year_baseline:
+        name: "178 \nw/1Y TS"
+        label: "1 Year"
+        label2: "Baseline"
+    178_14_12-1week_10%:
+        name: "178 \nw/1W TS\n10% MWh cost"
+        label: "1 Week"
+    178_16_14-1month_10%:
+        name: "178 \nw/1Month TS\n10% MWh cost"
+        label: "1 Month"
+    178_17_15-2month_10%:
+        name: "178 \nw/2Month TS\n10% MWh cost"
+        label: "2 Month"
+    178_18_16-6month_10%:
+        name: "178 \nw/6Month TS\n10% MWh cost"
+        label: "6 Month"
+    178_19_17-1year_10%:
+        name: "178 \nw/1Year TS\n10% MWh cost"
+        label: "1 Year"
+        label2: "10%"
+    178_14_12-1week_1%:
+        name: "178 \nw/1W TS\n1% MWh cost"
+        label: "1 Week"
+    178_16_14-1month_1%:
+        name: "178 \nw/1Month TS\n1% MWh cost"
+        label: "1 Month"
+    178_17_15-2month_1%:
+        name: "178 \nw/2Month TS\n1% MWh cost"
+        label: "2 Month"
+    178_18_16-6month_1%:
+        name: "178 \nw/6Month TS\n1% MWh cost"
+        label: "6 Month"
+    178_19_17-1year_1%:
+        name: "178 \nw/1Year TS\n1% MWh cost"
+        label: "1 Year"
+        label2: "1%"
+technologies:
+    Wind: 
+        color: "#01B0FE"
+        map:
+            - Wind
+    Offshore_Wind: 
+        color: "#4e4f4e"
+        map: 
+            - Offshore_Wind
+    Wave: 
+        color: "#FF1493"
+        map:
+            - Wave
+    Solar:
+        color: "#ffd400"
+        map:
+            - Central_PV 
+            - Commercial_PV 
+            - Residential_PV
+    Thermal:
+        color: "#d8d6da"
+        map:
+            - Gas_Steam_Turbine_Cogen
+            - Gas_Internal_Combustion_Engine
+            - Gas_Internal_Combustion_Engine_Cogen
+            - DistillateFuelOil_Internal_Combustion_Engine
+            - Gas_Steam_Turbine
+            - Gas_Combustion_Turbine
+            - Gas_Combustion_Turbine_Cogen
+            - CCGT
+            - CCGT_Cogen
+            - ST
+            - DistillateFuelOil_Combustion_Turbine
+            - GT
+            - OT
+    Coal:
+        color: k
+        map: 
+            - Coal_Steam_Turbine_Cogen 
+            - Coal_IGCC 
+            - Coal_Steam_Turbine
+    Biomass:
+        color: "#005c00"
+        map:
+            - Bio_Gas_Steam_Turbine
+            - Bio_Solid_Steam_Turbine
+            - Bio_Gas
+            - Bio_Liquid_Steam_Turbine_Cogen
+            - Bio_Gas_Internal_Combustion_Engine
+            - Bio_Solid_Steam_Turbine_Cogen
+            - Bio_Gas_Internal_Combustion_Engine_Cogen
+    Geothermal: 
+        color: "#76C623"
+        map:
+            - Geothermal
+    CSP: 
+        color: C3
+        map:
+            - CSP_Trough_6h_Storage 
+            - CSP_Trough_No_Storage
+    Storage: 
+        color: "#017285"
+        map:
+            - Battery_Storage
+    CompAir: 
+        color: "#4e4f4e"
+        map:
+            - Compressed_Air_Energy_Storage
+    Hydro: 
+        color: "#210b91"
+        map:
+            - Hydro_NonPumped
+    Pumped Hydro: 
+        color: "#02C1B1"
+        map:
+            - Hydro_Pumped
+    Nuclear: 
+        color: "#9A1987"
+        map:
+            - Nuclear
+
+tech_order:
+    - Coal
+    - Thermal
+    - Nuclear
+    - Geothermal
+    - Biomass
+    - Hydro
+    - Pumped Hydro
+    #- CompAir
+    - Wind
+    - Offshore_Wind
+    - CSP 
+    - Solar
+    - Wave
+    - Storage
